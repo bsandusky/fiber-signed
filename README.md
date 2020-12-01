@@ -58,7 +58,7 @@ func GetSignedURLFromHTTPRequest(r *http.Request) (string, error)
         Algorithm: "SHA-256",
     }))
 
-      // Signed routes
+    // Signed routes
     app.Get("/user/:id/unsubscribe", func(c *fiber.Ctx) error {
         return c.SendString("You've successfully unsubscribed!")
     })
