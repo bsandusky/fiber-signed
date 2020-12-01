@@ -1,5 +1,7 @@
 # fiber-signed
 
+The package adds support for signed URLs to the excellent [Fiber](https://gofiber.io/) framework. Once applied, `fiber-signed` middleware will check for correct signature values based on a shared private key for individual routes, route groups, or entire apps.
+
 ## Table of Contents
 
 - [Description](#description)
@@ -10,8 +12,6 @@
 - [Default Config](#default-config)
 
 ## Description
-
-The package adds support for signed URLs to the excellent [Fiber](https://gofiber.io/) framework. Once applied, `fiber-signed` middleware will check for correct signature values based on a shared private key for individual routes, route groups, or entire apps.
 
 Signed URLs are a common way to secure unauthenticated and publicly available routes in a way that ensures that no changes have been made to URL parameters prior to the request being received. A common use case is an unsubscribe route. Where an application may provide a route at `<app host>/user/:id/unsubscribe`, a malicious actor could change the `:id` value and unsubscribe other users as well. Instead, this public route can be made secure by validating a signature which is based on a number of operations (see below) and can only be generated with the unique values included in the URL itself and a shared private key. In this case the URL will look something like `<app host>/user/:id/unsubscribe?signature=<signature value>` and any changes to the URL string will provoke a 403 - Forbidden response.
 
@@ -34,7 +34,7 @@ In order to validate a URL signature, package `fiber-signed` does the following:
 
 ## Signatures
 
-```
+```go
 func New(config ...Config) fiber.Handler
 func GetSignedURLFromHTTPRequest(r *http.Request) (string, error)
 ```
@@ -43,7 +43,7 @@ func GetSignedURLFromHTTPRequest(r *http.Request) (string, error)
 
 ### Basic Usage as Middleware
 
-```
+```go
     app := fiber.New()
 
     // Unsigned routes
@@ -67,7 +67,7 @@ func GetSignedURLFromHTTPRequest(r *http.Request) (string, error)
 
 ### Getting a signed URL to use with your Fiber app
 
-```
+```go
     req, _ := http.NewRequest(http.MethodGet, "https://127.0.0.1:3000/?q=search", nil)
 
     signedURL, err := signed.GetSignedURLFromHTTPRequest(req)
@@ -81,7 +81,7 @@ func GetSignedURLFromHTTPRequest(r *http.Request) (string, error)
 
 ## Config
 
-```
+```go
 // Config defines the config for middleware.
 type Config struct {
     // Next defines a function to skip this middleware when returned true.
@@ -130,7 +130,7 @@ type Config struct {
 
 ## Default Config
 
-```
+```go
 // ConfigDefault is the default config
 var ConfigDefault = Config{
     Next:               nil,
